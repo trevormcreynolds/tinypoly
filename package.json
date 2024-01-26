@@ -1,0 +1,24 @@
+{
+  "name": "tinypoly",
+  "version": "0.0.1",
+  "description": "A lightweight alternative to Unpoly with zero dependencies and an identical API surface.",
+  "main": "tinypoly.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zero-sigma/tinypoly.git"
+  },
+  "keywords": [
+    "tinypoly",
+    "unpoly",
+    "lightweight"
+  ],
+  "author": "Trevor McReynolds",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zero-sigma/tinypoly/issues"
+  },
+  "homepage": "https://github.com/zero-sigma/tinypoly#readme"
+}
