@@ -1,37 +1,44 @@
-/*!
- * Tinypoly v0.0.1
- * 2024 Trevor McReynolds
- * WARNING: This is an alpha version of the library and is not intended for production use.
- */
-
-// console.warn("Warning: This is an experimental version of 'tinypoly.js'. This library is intended for testing purposes only and should not be used in production.");
-
 (function() {
-  // Set this to false to disable history and head updates
-  var updateHistoryAndHead = true;
+  var config = {
+    // Set this to false to disable history and head updates
+    updateHistoryAndHead: true, // Default setting
+  };
+
   var previousSelectedLink = null;
 
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('[tp-target]').forEach(function(link) {
-      link.addEventListener('click', function(event) {
-        event.preventDefault();
-        handleLinkSelection(link);
-        var targetSelector = link.getAttribute('tp-target');
-        var url = link.getAttribute('href');
-        fetchContent(url, targetSelector, updateHistoryAndHead); // Pass `true` to update history
+  // Initialization function to override default configurations
+  function init(customConfig) {
+    Object.assign(config, customConfig); // Override default config with custom settings
+    setupEventListeners();
+  }
+
+  function setupEventListeners() {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('[tp-target]').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          handleLinkSelection(link);
+          var targetSelector = link.getAttribute('tp-target');
+          var url = link.getAttribute('href');
+          fetchContent(url, targetSelector); // Pass `true` to update history
+        });
       });
+  
+      if (config.updateHistoryAndHead) {
+        window.addEventListener('popstate', function(event) {
+          // Handle browser navigation
+          // Load content based on the current state
+          // This may require storing additional state information when using pushState
+        });
+      }
     });
+  }
 
-    if (updateHistoryAndHead) {
-      window.addEventListener('popstate', function(event) {
-        // Handle browser navigation
-        // Load content based on the current state
-        // This may require storing additional state information when using pushState
-      });
-    }
-  });
+  function handlePopState(event) {
+    // Handle browser navigation based on the current state
+  }
 
-  function fetchContent(url, targetSelector, updateHistory = false) {
+  function fetchContent(url, targetSelector) {
     fetch(url)
       .then(response => response.text())
       .then(html => {
@@ -39,7 +46,7 @@
         var doc = parser.parseFromString(html, 'text/html');
         var content = doc.querySelector(targetSelector);
         document.querySelector(targetSelector).innerHTML = content.innerHTML;
-        if (updateHistory) {
+        if (config.updateHistoryAndHead) {
           updateHistoryStateAndHead(doc, url);
         }
       })
@@ -83,4 +90,8 @@
     link.classList.add('selected');
     previousSelectedLink = link;
   }
+
+  window.tinypoly = {
+    init: init
+  };
 })();
